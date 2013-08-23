@@ -25,6 +25,19 @@ var checkObj = { /**数据验证类**/
         }
         return type;
     },
+    showMsg:function(opts){
+        return {
+            _error:function(){
+                opts.errorContainer.text(opts.checker.message).show();
+                opts.checkElement.addClass('error-border');
+                opts.tipsContainer.hide();
+            },
+            OK:function(){
+                opts.errorContainer.text('').hide();
+                opts.checkElement.removeClass('error-border');
+            }
+        }
+    },
     // 此处验证，可以考虑把错误信息压到数组中进行处理
     // 对于不存在的tips，还需要进一步健壮处理
     check: function(checkElement, checkConfig) {
@@ -42,26 +55,24 @@ var checkObj = { /**数据验证类**/
             checker = this.checkFunc[checkConfig];
             result_ok = checker.validate(value); //对单个进行验证
             if (!result_ok) {
-                errorContainer.text(checker.message).show();
-                checkElement.addClass('error-border');
-                tipsContainer.hide();
+                this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
                 return false;
             }
-            errorContainer.text('').hide();
-            checkElement.removeClass('error-border');
+            this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
         } else if (checkType === 'array') {
             for (i = 0, j = checkConfig.length; i < j; i++) {
                 checker = this.checkFunc[checkConfig[i]];
                 result_ok = checker.validate(value);
                 if (!result_ok) {
-                    errorContainer.text(checker.message).show();
-                    checkElement.addClass('error-border');
-                    tipsContainer.hide();
+                    this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
                     return false;
                 }
             }
-            errorContainer.text('').hide();
-            checkElement.removeClass('error-border');
+            this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
         } else if (checkType === 'object') {
             // 调用自定义函数
             // 应当还支持混合验证，即调用通用验证和自定义验证函数
@@ -69,32 +80,31 @@ var checkObj = { /**数据验证类**/
             // 不进行默认与自定义函数名称重复判断
             for (i in checkConfig) {
                 if (i === 'tips') {
-
                 } else if (i === 'defaultValidate') {
                     validateArr = checkConfig.defaultValidate;
                     for (dLoop = 0, dLen = validateArr.length; dLoop < dLen; dLoop++) {
                         checker = this.checkFunc[validateArr[dLoop]];
                         result_ok = checker.validate(value);
                         if (!result_ok) {
-                            errorContainer.text(checker.message).show();
-                            checkElement.addClass('error-border');
-                            tipsContainer.hide();
+                            this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
+                           
                             return false;
                         }
                     }
-                    errorContainer.text('').hide();
-                    checkElement.removeClass('error-border');
+                    this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
                 } else {
                     checker = checkConfig[i];
                     result_ok = checker.validate(value);
                     if (!result_ok) {
-                        errorContainer.text(checker.message).show();
-                        checkElement.addClass('error-border');
-                        tipsContainer.hide();
+                        this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
+                        
                         return false;
                     }
-                    errorContainer.text('').hide();
-                    checkElement.removeClass('error-border');
+                    this.showMsg({checkElement:checkElement,
+                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
                 }
             }
         }
