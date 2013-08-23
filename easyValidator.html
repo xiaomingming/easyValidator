@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>测试</title>
+        <style>
+            * { margin: 0; padding: 0; }
+            body { font: 12px/1.5 arail; }
+            ul { list-style: none; }
+            .login .form { overflow: hidden; _zoom: 1;}
+            .login .form-infor { float: left; /*width: 400px;*/ }
+            .login .form-tips { float: right; width: 200px; border: 1px solid orange; }
+            .login .form-item { margin-top: 10px; font-size: 14px; overflow: hidden; zoom:1; }
+            .login .form-item label { float: left; width: 10em; height: 24px; line-height: 24px; padding-right: 0.5em; text-align: right; }
+            .login .form-item ul { float: left; }
+            .login .form-item ul li { float: left; }
+            .login .form-item ul li label { width: auto; }
+            .login .form-item .error-border { border: 1px solid orange; }
+            .login .form-item select,.login .form-item textarea { float: left; }
+            .login .form-item input.text,.login .form-item input.passowrd { float: left; height: 22px; line-height: 22px; width: 10em; border: 1px solid #666; color: #444; }
+            .login .form-item input:focus { border: 1px solid green; }
+            .login .form-item .error,.login .form-item .tips { display: none; float: left; padding: 0 10px; margin-left: 10px; _display:inline; height: 22px; line-height: 22px; overflow: hidden;  border-radius: 3px; }
+            .login .form-item .error { border: 1px solid orange; color: orange; }
+            .login .form-item .tips { border: 1px solid green; color: green; }
+            .login .submit-container { /*text-align: center;*/ }
+            .login .form-item .form-submit { width: 6em; height: 24px; margin-left: 137px; background: #44a689; color: #fff; overflow: visible; cursor: pointer; border: 0; }
+        </style>
+    </head>
+    <body>
+        <div class="login">
+            <form action="http://www.baidu.com" class="form" id="login">
+                <div class="form-infor">
+                    <div class="form-item">
+                        <label for="username">用户名:</label>
+                        <input type="text" id="username" class="text user-name" />
+                        <div class="error"></div>
+                        <div class="tips">ssssssssssssssssss</div>
+                    </div>
+                    <div class="form-item"><label for="select">身份：</label>
+                        <select>
+                            <option value=''>---请选择---</option>
+                            <option value='0'>学生</option>
+                            <option value='1'>军人</option>
+                            <option value='2'>教师</option>
+                            <option value='3'>记者</option>
+                            <option value='4'>无业</option>
+                        </select>
+                        <div class="error"></div>
+                        <div class="tips"></div>
+                    </div>
+                    <div class="form-item">
+                        <label>密码:</label>
+                        <input type="password" class="pwd passowrd" />
+                        <div class="error"></div>
+                        <div class="tips"></div>
+                    </div>
+                    <div class="form-item">
+                        <label>确认密码:</label>
+                        <input type="password" class="confirm-pwd passowrd" />
+                        <div class="error"></div>
+                        <div class="tips"></div>
+                    </div>
+                    <div class="form-item">
+                        <label>注册邮箱:</label>
+                        <input type="text" class="text reg-email" />
+                        <div class="error"></div>
+                        <div class="tips"></div>
+                    </div>
+                    <div class="form-item"><label>你的爱好：</label>
+                        <ul>
+                            <li><label for="1">乒乓球</label><input type="checkbox" class="ckb" id="1" value='1'/></li>
+                            <li><label for="2">羽毛球</label><input type="checkbox" class="ckb" id="2" value='2'/></li>
+                            <li><label for="3">篮球</label><input type="checkbox" class="ckb" id="3" value='3'/></li>
+                            <li><label for="4">跑步</label><input type="checkbox" class="ckb" id="4" value='4'/></li>
+                            <li><label for="5">爬山</label><input type="checkbox" class="ckb" id="5" value='5'/></li>
+                            <li><label for="6">上网</label><input type="checkbox" class="ckb" id="6" value='6'/></li>
+                        </ul>
+                        <input type="hidden" value="">
+                        <div class="error"></div>
+                        <div class="tips"></div>
+                    </div>
+                    <div class="form-item">
+                        <label>你的心情：</label>
+                        <textarea name=""></textarea>
+                        <div class="error"></div>
+                        <div class="tips"></div>
+                    </div>
+                    <div class="form-item submit-container">
+                        <input type="submit" class="form-submit" value="注册">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js "></script>
+        <script type="text/javascript" src="/js/utils/easyValidator.js"></script>
+        <script type="text/javascript">
+            /*
+            * 验证的调用顺序对验证的先后有影响
+            * 比如把defaultValidate定义在自定义函数前面，则优先执行defaultValidate配置规则
+            */
+            checkObj.initialize($('#login'),{
+                fullName:$('.user-name'),
+                regEmail:$('.reg-email'),
+                pwd:$('.pwd'),
+                confirmPwd:$('.confirm-pwd'),
+                select:$('select'),
+                textarea:$('textarea')
+            },{
+                fullName:{
+                    isEmpty:{
+                        validate:function(val){
+                            return val!='';
+                        },
+                        message:'用户名不能为空！',//错误消息
+                        tips:'不选不行'
+                    },
+                    defaultValidate:['isUserName'],
+                    isRepeated:{
+                        validate:function(val){
+                            var flag=false;
+                            $.ajax({
+                                url:'',
+                                type:'get',
+                                async:false,
+                                success:function(res){
+                                    flag=true;
+                                }
+                            });
+                            return flag;
+                        },
+                        message:'重名',
+                        tips:'不选不行a'
+                    }
+                },
+                regEmail:{
+                    isEmpty:{
+                        validate:function(val){
+                            return val!='';
+                        },
+                        message:'邮箱不能为空！'//错误消息
+                    },
+                    defaultValidate:['isEmail']
+                },
+                pwd:{
+                    defaultValidate:['isEmpty'],
+                    minLength:{
+                        validate:function(val){
+                            return val.length>=6;
+                        },
+                        message:'密码长度至少6位以上'
+                    },
+                    isSame:{
+                        validate:function(val){
+                            if($('.confirm-pwd').val()!==''){
+                                return val===$('.confirm-pwd').val();
+                            }else {
+                                return true;
+                            }
+                        },
+                        message:'密码不一致'
+                    }
+                },
+                confirmPwd:{
+                    defaultValidate:['isEmpty'],
+                    minLength:{
+                        validate:function(val){
+                            return val.length>=6;
+                        },
+                        message:'密码长度至少6位以上'
+                    },
+                    isSame:{
+                        validate:function(val){
+                            return val===$('.pwd').val();
+                        },
+                        message:'密码不一致'
+                    }
+                },
+                select:{
+                    isEmpty:{
+                        validate:function(val){
+                            return val!=='';
+                        },
+                        message:'选择不能为空'
+                    }
+                },
+                textarea:'isEmpty',
+                hiddenEle:'isEmpty'
+            });
+        </script>
+    </body>
+</html>
