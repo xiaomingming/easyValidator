@@ -1,0 +1,20 @@
+* { margin: 0; padding: 0; }
+body { font: 12px/1.5 arail; }
+ul { list-style: none; }
+.form { overflow: hidden; _zoom: 1;}
+.form-infor { float: left; /*width: 400px;*/ }
+.form-tips { float: right; width: 200px; border: 1px solid orange; }
+.form-item { margin-top: 10px; font-size: 14px; overflow: hidden; zoom:1; }
+.form-item label { float: left; width: 10em; height: 24px; line-height: 24px; padding-right: 0.5em; text-align: right; }
+.form-item ul { float: left; }
+.form-item ul li { float: left; }
+.form-item ul li label { width: auto; }
+.form-item .error-border { border: 1px solid orange; }
+.form-item select,.form-item textarea { float: left; }
+.form-item input.text,.form-item input.passowrd { float: left; height: 22px; line-height: 22px; width: 10em; border: 1px solid #666; color: #444; }
+.form-item input:focus { border: 1px solid green; }
+.form-item .error,.form-item .tips { display: none; float: left; padding: 0 10px; margin-left: 10px; _display:inline; height: 22px; line-height: 22px; overflow: hidden;  border-radius: 3px; }
+.form-item .error { border: 1px solid orange; color: orange; }
+.form-item .tips { border: 1px solid green; color: green; }
+.submit-container { /*text-align: center;*/ }
+.form-item .form-submit { width: 6em; height: 24px; margin-left: 137px; background: #44a689; color: #fff; overflow: visible; cursor: pointer; border: 0; }
