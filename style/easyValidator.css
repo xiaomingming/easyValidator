@@ -5,16 +5,18 @@ ul { list-style: none; }
 .form-infor { float: left; /*width: 400px;*/ }
 .form-tips { float: right; width: 200px; border: 1px solid orange; }
 .form-item { margin-top: 10px; font-size: 14px; overflow: hidden; zoom:1; }
-.form-item label { float: left; width: 10em; height: 24px; line-height: 24px; padding-right: 0.5em; text-align: right; }
+.form-item label { float: left; width: 10em; height: 42px; line-height: 42px; padding-right: 0.5em; text-align: right; }
 .form-item ul { float: left; }
 .form-item ul li { float: left; }
 .form-item ul li label { width: auto; }
-.form-item .error-border { border: 1px solid orange; }
+.form-item .error-border { border: 1px solid #f00!important; }
+.form-item textarea { width: 310px; height: 150px; border: 1px solid #c1c1c1; resize: vertical; }
 .form-item select,.form-item textarea { float: left; }
-.form-item input.text,.form-item input.passowrd { float: left; height: 22px; line-height: 22px; width: 10em; border: 1px solid #666; color: #444; }
-.form-item input:focus { border: 1px solid green; }
-.form-item .error,.form-item .tips { display: none; float: left; padding: 0 10px; margin-left: 10px; _display:inline; height: 22px; line-height: 22px; overflow: hidden;  border-radius: 3px; }
-.form-item .error { border: 1px solid orange; color: orange; }
-.form-item .tips { border: 1px solid green; color: green; }
+.form-item input.text,.form-item input.passowrd { float: left; width:310px; 
+ padding: 11px 10px;   /*line-height: 12px;*/ font-size: 14px; color:#4d4d4d; border: 1px solid #c1c1c1;  }
+.form-item input:focus { border: 1px solid #07f; outline: none; }
+.form-item .error,.form-item .tips { display: none; float: left; padding: 8px 10px; margin-left: 10px; _display:inline; overflow: hidden;  border-radius: 3px; }
+.form-item .error { background-color:#fff5f5; border:1px solid #f00; color:#f00; }
+.form-item .tips { border: 1px solid #C2C8C8; color: #4D4D4D; background: #f9f9f9; }
 .submit-container { /*text-align: center;*/ }
-.form-item .form-submit { width: 6em; height: 24px; margin-left: 137px; background: #44a689; color: #fff; overflow: visible; cursor: pointer; border: 0; }
+.form-item .form-submit { width: 6em; height: 34px; line-height: 34px; margin-left: 147px; background: #44a689; color: #fff; overflow: visible; cursor: pointer; border: 0; }

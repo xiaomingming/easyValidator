@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>javascript 表单验证插件</title>
-        <link rel="stylesheet" type="text/css" href="easyValidator.css">
+        <link rel="stylesheet" type="text/css" href="style/easyValidator.css">
     </head>
     <body>
         <div class="login">
@@ -45,7 +45,7 @@
                         <div class="error"></div>
                         <div class="tips"></div>
                     </div>
-                    <div class="form-item"><label>你的爱好：</label>
+                    <!-- <div class="form-item"><label>你的爱好：</label>
                         <ul>
                             <li><label for="1">乒乓球</label><input type="checkbox" class="ckb" id="1" value='1'/></li>
                             <li><label for="2">羽毛球</label><input type="checkbox" class="ckb" id="2" value='2'/></li>
@@ -57,7 +57,7 @@
                         <input type="hidden" value="">
                         <div class="error"></div>
                         <div class="tips"></div>
-                    </div>
+                    </div> -->
                     <div class="form-item">
                         <label>你的心情：</label>
                         <textarea name=""></textarea>
@@ -70,8 +70,8 @@
                 </div>
             </form>
         </div>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js "></script>
-        <script type="text/javascript" src="/js/utils/easyValidator.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="js/easyValidator.js"></script>
         <script type="text/javascript">
             /*
             * 验证的调用顺序对验证的先后有影响
@@ -86,12 +86,12 @@
                 textarea:$('textarea')
             },{
                 fullName:{
+                    tips:'用户名就是你的昵称啊',
                     isEmpty:{
                         validate:function(val){
                             return val!='';
                         },
-                        message:'用户名不能为空！',//错误消息
-                        tips:'不选不行'
+                        message:'用户名不能为空！'//错误消息
                     },
                     defaultValidate:['isUserName'],
                     isRepeated:{
@@ -107,11 +107,11 @@
                             });
                             return flag;
                         },
-                        message:'重名',
-                        tips:'不选不行a'
+                        message:'重名'
                     }
                 },
                 regEmail:{
+                    tips:'邮箱是你重要资料找回的练习信息',
                     isEmpty:{
                         validate:function(val){
                             return val!='';
@@ -121,6 +121,7 @@
                     defaultValidate:['isEmail']
                 },
                 pwd:{
+                    tips:'先填写我哦',
                     defaultValidate:['isEmpty'],
                     minLength:{
                         validate:function(val){
@@ -140,6 +141,7 @@
                     }
                 },
                 confirmPwd:{
+                    tips:'确认密码要和初始一致',
                     defaultValidate:['isEmpty'],
                     minLength:{
                         validate:function(val){
