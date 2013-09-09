@@ -87,7 +87,7 @@
             },{
                 fullName:{
                     tips:'用户名就是你的昵称啊',
-                    isEmpty:{
+               /*     isEmpty:{
                         validate:function(val){
                             return val!='';
                         },
@@ -108,7 +108,8 @@
                             return flag;
                         },
                         message:'重名'
-                    }
+                    }*/
+                    defaultValidate:['userName']
                 },
                 regEmail:{
                     tips:'邮箱是你重要资料找回的练习信息',

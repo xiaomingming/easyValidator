@@ -1,8 +1,3 @@
-// 应当还要支持动态字段验证
-// 其它表单元素，如radio无需验证，因为它总是有默认值的
-// checkbox的验证比较复杂了，可以通过埋藏隐藏域来判断checkbox列表中是否有选中，因此，这个验证，只需要验证隐藏域的值是否存在
-// 可以通过自定义回调函数来做验证
-// radio,checkbox,fileup 等验证，由于绑定的事件不是blur，可以通过回调自定义
 var checkObj = { /**数据验证类**/
     checkFunc: {}, //验证数据的函数对象集合
     // errorMessage:[],//错误消息
@@ -20,19 +15,21 @@ var checkObj = { /**数据验证类**/
         } else if (to.call(data, null) === '[object Object]') {
             // 传入的是个对象
             type = 'object';
+        } else if (to.call(data, null) === '[object Function]') {
+            type = 'function';
         } else {
             type = 'null';
         }
         return type;
     },
-    showMsg:function(opts){
+    showMsg: function(opts) {
         return {
-            _error:function(){
+            _error: function() {
                 opts.errorContainer.text(opts.checker.message).show();
                 opts.checkElement.addClass('error-border');
                 opts.tipsContainer.hide();
             },
-            OK:function(){
+            OK: function() {
                 opts.errorContainer.text('').hide();
                 opts.checkElement.removeClass('error-border');
             }
@@ -55,56 +52,85 @@ var checkObj = { /**数据验证类**/
             checker = this.checkFunc[checkConfig];
             result_ok = checker.validate(value); //对单个进行验证
             if (!result_ok) {
-                this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
+                this.showMsg({
+                    checkElement: checkElement,
+                    errorContainer: errorContainer,
+                    tipsContainer: tipsContainer,
+                    checker: checker
+                })._error();
                 return false;
             }
-            this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
+            this.showMsg({
+                checkElement: checkElement,
+                errorContainer: errorContainer,
+                tipsContainer: tipsContainer,
+                checker: checker
+            }).OK();
         } else if (checkType === 'array') {
             for (i = 0, j = checkConfig.length; i < j; i++) {
                 checker = this.checkFunc[checkConfig[i]];
                 result_ok = checker.validate(value);
                 if (!result_ok) {
-                    this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
+                    this.showMsg({
+                        checkElement: checkElement,
+                        errorContainer: errorContainer,
+                        tipsContainer: tipsContainer,
+                        checker: checker
+                    })._error();
                     return false;
                 }
             }
-            this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
+            this.showMsg({
+                checkElement: checkElement,
+                errorContainer: errorContainer,
+                tipsContainer: tipsContainer,
+                checker: checker
+            }).OK();
         } else if (checkType === 'object') {
             // 调用自定义函数
             // 应当还支持混合验证，即调用通用验证和自定义验证函数
-            // 使用defaultValidate来配置默认
-            // 不进行默认与自定义函数名称重复判断
             for (i in checkConfig) {
-                if (i === 'tips') {
-                } else if (i === 'defaultValidate') {
+                if (i === 'tips') {} else if (i === 'defaultValidate') {
                     validateArr = checkConfig.defaultValidate;
                     for (dLoop = 0, dLen = validateArr.length; dLoop < dLen; dLoop++) {
                         checker = this.checkFunc[validateArr[dLoop]];
                         result_ok = checker.validate(value);
                         if (!result_ok) {
-                            this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
-                           
+                            this.showMsg({
+                                checkElement: checkElement,
+                                errorContainer: errorContainer,
+                                tipsContainer: tipsContainer,
+                                checker: checker
+                            })._error();
+
                             return false;
                         }
                     }
-                    this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
+                    this.showMsg({
+                        checkElement: checkElement,
+                        errorContainer: errorContainer,
+                        tipsContainer: tipsContainer,
+                        checker: checker
+                    }).OK();
                 } else {
                     checker = checkConfig[i];
                     result_ok = checker.validate(value);
                     if (!result_ok) {
-                        this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker})._error();
-                        
+                        this.showMsg({
+                            checkElement: checkElement,
+                            errorContainer: errorContainer,
+                            tipsContainer: tipsContainer,
+                            checker: checker
+                        })._error();
+
                         return false;
                     }
-                    this.showMsg({checkElement:checkElement,
-                    errorContainer:errorContainer,tipsContainer:tipsContainer,checker:checker}).OK();
+                    this.showMsg({
+                        checkElement: checkElement,
+                        errorContainer: errorContainer,
+                        tipsContainer: tipsContainer,
+                        checker: checker
+                    }).OK();
                 }
             }
         }
@@ -121,43 +147,27 @@ var checkObj = { /**数据验证类**/
         // 判断checkConfig是数组，还是对象，还是字符串
         checkElement.removeClass('error-border');
         errorContainer.hide();
+        // console.log(checkConfig);
         if (!checkConfig.tips) {
             tipsContainer.text('').hide();
         } else {
             tipsContainer.text(checkConfig.tips).show();
         }
     },
-    initialize: function(formId, validateData, checkConfig) {
+    initialize: function(formId, validateData, checkConfig, callback) {
         // 针对文本输入框进行blur事件绑定
         // 需要支持对无事件隐藏字段的绑定
+        var that = this;
         $.each(validateData, function(i, ele) {
             ele.blur(function() {
                 checkObj.check(ele, checkConfig[i]);
             }).focus(function() {
                 checkObj.tips(ele, i, checkConfig[i]);
             });
-            /*var textInput = ele.filter('[type="text"]'),
-                passwordInput = ele.filter('[type="password"]'),
-                selectElement = ele.filter('select'),
-                textArea = ele.filter('textarea'),
-                hiddenValue = ele.filter('[type="hidden"]');
-            textInput.blur(function() {
-                checkObj.check(ele, checkConfig[i],i);
-            }).focus(function() {
-                checkObj.tips(ele, checkConfig[i],i);
-            });*/
-            /*passwordInput.blur(function() {
+            /*ele.keyup(function() {
                 checkObj.check(ele, checkConfig[i]);
-            }).focus(function(){
-                checkObj.tips(ele, checkConfig[i]);
-            });
-            textArea.blur(function() {
-                checkObj.check(ele, checkConfig[i]);
-            }).focus(function(){
-                checkObj.tips(ele, checkConfig[i]);
-            });
-            selectElement.change(function() {
-                checkObj.check(ele, checkConfig[i]);
+            }).keydown(function() {
+                checkObj.tips(ele, i, checkConfig[i]);
             });*/
         });
 
@@ -171,11 +181,51 @@ var checkObj = { /**数据验证类**/
                     flag = false;
                 };
             });
-            flag && formId.get(0).submit();
+            if ( !! callback && (that.getType(callback) === 'function')) {
+                flag && callback();
+            } else {
+                flag && formId.get(0).submit();
+            }
         });
     }
 }
+/*
+ * 考虑到常用的字段验证包含了基本验证函数中的一些，所以，可以把这些封装起来，而不用通过数组的方式调用最小验证函数
+ */
+// 用户名验证
+checkObj.checkFunc.userName = {
+    validate: function(val) {
+        if ($.trim(val) === '') {
+            this.message = '用户名不能为空';
+            return false;
+        }
+        if (/\w/g.test(val) === false) {
+            this.message = '用户名输入只能为数字，字母和下划线';
+            return false;
+        }
+        if ($.trim(val).length > 16 || $.trim(val).length < 2) {
+            this.message = '用户名长度错误';
+            return false;
+        }
+        return true;
+    },
+    message: ''
+};
 
+/*checkObj.checkFunc.userName = {
+    validate:function(val){
+        if($.trim(val)===''){
+            this.message='用户名不能为空';
+            return false;
+        }
+        if(/\w/g.test(val)===false){
+            this.message='用户名输入只能为数字，字母和下划线';
+            return false
+        }
+        return true;
+    },
+    message:''
+};*/
 /*
  * 检查是否为空
  */
