@@ -172,8 +172,6 @@ var checkObj = { /**数据验证类**/
         });
 
         formId.find('input[type="submit"]').click(function(e) {
-            // 阻止默认提交
-            e.preventDefault();
             var flag = true;
             // 若验证全部完成，则进行表单提交
             $.each(validateData, function(i, ele) {
@@ -181,10 +179,15 @@ var checkObj = { /**数据验证类**/
                     flag = false;
                 };
             });
+
             if ( !! callback && (that.getType(callback) === 'function')) {
+                //存在回调的情形
                 flag && callback();
             } else {
-                flag && formId.get(0).submit();
+                //使用默认提交的action
+                // 阻止默认提交
+                !flag&&e.preventDefault();
+                // flag && formId.get(0).submit();
             }
         });
     }
