@@ -1,6 +1,4 @@
 #EasyValidator
-------------------------------------------------
-
 #一个简单的js表单验证插件
 ##插件说明
 * 初期表单验证只支持预绑定字段验证，对于动态创建的字段验证尚不支持
@@ -21,8 +19,14 @@ checkObj.initialize($('#login'),{fullName:$('.user-name')},{
     }
 });
 ```
+###参数说明
 
-初始化验证时，需要给checkObj对象的initialize方法传入参数：分别为欲验证的表单form jquery对象，验证的字段对象，验证字段对相应的验证规则。
+初始化验证时，需要给checkObj对象的initialize方法传入参数：分别为：
+
+* 欲验证的表单form jquery对象
+* 验证的字段对象
+* 验证字段对相应的验证规则
+* 可选字段，回调函数
 
 这三个是必须设置的参数。若想在表单验证完成后，不使用默认的表单提交，而需要回调函数进一步做控制，则第四个参数可以传入回调，自行控制。
 传入回调后，请手动设置表单提交，更改Action。
@@ -79,7 +83,73 @@ checkObj.checkFunc.isEmpty = {
 }
 ```
 
-验证规则的**validate**函数必须返回布尔值。**message**属性则是错误信息提示。
+验证规则的**validate**函数必须返回布尔值，**val**代表验证字段的输入值。**message**属性则是错误信息提示。
 
+###自定义验证规则
+
+如何自定义验证规则呢？这个验证插件，实际上，我只是提供了验证的语法，考虑到实际的验证规则因项目而异，我就没有内置验证规则。
+因此这里大家可以自由定义咯。嘻嘻。那么如何定义呢？
+
+验证规则的定义分为两种：
+* 对于通用的验证规则，可以像userName那样，写在验证插件中，然后就可以在验证规则中进行调用了。这个时候，使用defaultvalidate属性进行调用。
+* 对于私有的验证规则，也就是很少用到的验证字段，可以直接在验证规则中定义，而不用写在插件中。比如密码校验：
+
+```
+pwd:{
+    tips:'先填写我哦',
+    defaultValidate:['isEmpty'],
+    minLength:{
+        validate:function(val){
+            return val.length>=6;
+        },
+        message:'密码长度至少6位以上'
+    },
+    isSame:{
+        validate:function(val){
+            if($('.confirm-pwd').val()!==''){
+                return val===$('.confirm-pwd').val();
+            }else {
+                return true;
+            }
+        },
+        message:'密码不一致'
+    }
+}
+```
+以上规则中，使用了通用的验证规则 *defaultValidate:['isEmpty']*，而且还自定义了私有的验证规则，*minLength* 和*isSame*。
+
+###Ajax同步校验
+
+通常会有这样的校验需求，我们需要验证登陆用户名是不是正确的，这时就需要和后端进行通信验证了。异步校验，无法同步返回验证结果。
+所以只能设置为同步校验了，可以设置 jquery 内置方法ajax async属性为 false。
+
+示例：
+
+```
+fullName:{
+    tips:'用户名就是你的昵称啊',
+    isEmpty:{
+        validate:function(val){
+            return val!='';
+        },
+        message:'用户名不能为空！'//错误消息
+    },
+    defaultValidate:['isUserName'],
+    isRepeated:{
+        validate:function(val){
+            var flag=false;
+            $.ajax({
+                url:'',
+                type:'get',
+                async:false,
+                success:function(res){
+                    flag=true;
+                }
+            });
+            return flag;
+        },
+        message:'重名'
+    }
+```
 
 
