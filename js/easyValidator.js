@@ -172,7 +172,7 @@ var checkObj = { /**数据验证类**/
         });
 
         // formId.find('input[type="submit"]').click(function(e) {
-            formId.on('submit',function(e){
+        formId.on('submit',function(e){
             var flag = true;
             // 若验证全部完成，则进行表单提交
             $.each(validateData, function(i, ele) {
