@@ -215,21 +215,6 @@ checkObj.checkFunc.userName = {
     },
     message: ''
 };
-
-/*checkObj.checkFunc.userName = {
-    validate:function(val){
-        if($.trim(val)===''){
-            this.message='用户名不能为空';
-            return false;
-        }
-        if(/\w/g.test(val)===false){
-            this.message='用户名输入只能为数字，字母和下划线';
-            return false
-        }
-        return true;
-    },
-    message:''
-};*/
 /*
  * 检查是否为空
  */
