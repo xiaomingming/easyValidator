@@ -6,7 +6,7 @@
 * 文本输入框和select表单元素验证支持，对于radio，checkbox验证不支持，实际上，也不需要支持radio
 * UI效果类似支付宝注册
 ##效果截图
-
+![demo 截图](https://github.com/xiaomingming/EasyValidator/blob/master/images/demo.jpg)
 ##语法说明
 
 ###初始化
@@ -14,8 +14,9 @@
 ```
 checkObj.initialize($('#login'),{fullName:$('.user-name')},{
     fullName:{
-        tips:'用户名就是你的昵称啊',
-        defaultValidate:['userName']
+        isRequired:true,//必须验证字段
+        tips:'用户名就是你的昵称啊',//验证提示
+        defaultValidate:['userName']//使用默认的常用验证 userName验证
     }
 });
 ```
@@ -48,7 +49,7 @@ checkObj.initialize($('#login'),{fullName:$('.user-name')},{
 
 验证字段名称应当和验证规则名称对应起来：比如示例中的 **fullName** 字段和规则中的 **fullName**
 
-验证规则对象中，**tips**属性代表的是验证提示，也就是鼠标focus到输入框时的提示文字，若不需要提示，请不要写上该属性
+验证规则对象中，**isRequired**属性代表的是该字段是否为必须验证字段，**tips**属性代表的是验证提示，也就是鼠标focus到输入框时的提示文字，若不需要提示，请不要写上该属性
 
 **defaultValidate** 属性可以设置单个验证，也可以设置多个验证。单个验证可以用字符串指明，比如：'userNameValidateRule'。多个验证组合，请放在数组中，比如['isEmpty','isNumber']。但是这里不建议这么做。如果有一些常用的验证规则，请直接写入该插件中，在checkObj.checkFunc命名空间进行验证扩展。比如：
 
@@ -96,6 +97,7 @@ checkObj.checkFunc.isEmpty = {
 
 ```
 pwd:{
+    isRequired:true,
     tips:'先填写我哦',
     defaultValidate:['isEmpty'],
     minLength:{
@@ -127,29 +129,9 @@ pwd:{
 
 ```
 fullName:{
+    isRequired:true,
     tips:'用户名就是你的昵称啊',
-    isEmpty:{
-        validate:function(val){
-            return val!='';
-        },
-        message:'用户名不能为空！'//错误消息
-    },
-    defaultValidate:['isUserName'],
-    isRepeated:{
-        validate:function(val){
-            var flag=false;
-            $.ajax({
-                url:'',
-                type:'get',
-                async:false,
-                success:function(res){
-                    flag=true;
-                }
-            });
-            return flag;
-        },
-        message:'重名'
-    }
+    defaultValidate:['isUserName']
 ```
 
 
