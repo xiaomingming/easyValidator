@@ -5,8 +5,7 @@
 * 支持自定义验证函数，ajax同步校验
 * 文本输入框和select表单元素验证支持，对于radio，checkbox验证不支持，实际上，也不需要支持radio
 * UI效果类似支付宝注册
-##效果截图
-![demo 截图](https://github.com/xiaomingming/EasyValidator/blob/master/images/demo.jpg)
+
 ##语法说明
 
 ###初始化
