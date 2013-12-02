@@ -86,32 +86,11 @@
                 textarea:$('textarea')
             },{
                 fullName:{
-                    tips:'用户名就是你的昵称啊',
-                    isEmpty:{
-                        validate:function(val){
-                            return val!='';
-                        },
-                        message:'用户名不能为空！'//错误消息
-                    },
-                    defaultValidate:['isUserName'],
-                    isRepeated:{
-                        validate:function(val){
-                            var flag=false;
-                            $.ajax({
-                                url:'',
-                                type:'get',
-                                async:false,
-                                success:function(res){
-                                    flag=true;
-                                }
-                            });
-                            return flag;
-                        },
-                        message:'重名'
-                    }
-                    defaultValidate:['userName']
+                    'isRequired':true,
+                    defaultValidate:['isUserName']
                 },
                 regEmail:{
+                    'isRequired':false,
                     tips:'邮箱是你重要资料找回的联系信息',
                     isEmpty:{
                         validate:function(val){
@@ -122,6 +101,7 @@
                     defaultValidate:['isEmail']
                 },
                 pwd:{
+                    'isRequired':true,
                     tips:'先填写我哦',
                     defaultValidate:['isEmpty'],
                     minLength:{
@@ -142,6 +122,7 @@
                     }
                 },
                 confirmPwd:{
+                    'isRequired':true,
                     tips:'确认密码要和初始一致',
                     defaultValidate:['isEmpty'],
                     minLength:{
@@ -158,6 +139,7 @@
                     }
                 },
                 select:{
+                    'isRequired':true,
                     isEmpty:{
                         validate:function(val){
                             return val!=='';

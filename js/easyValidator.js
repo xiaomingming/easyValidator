@@ -1,3 +1,13 @@
+/*
+*  author:leweiming
+*  gmail: xmlovecss
+*  支持必须和非必须字段验证
+*  非必须字段只是在失去焦点时验证，提交不做验证
+*  目前只是支持预载入验证，不支持异步生成的字段验证（比如动态创建DOM字段）
+*  没有定义字段的验证规则，该插件只是定义了验证的书写方式
+*  若想增加常用字段的验证，请参考手册，非常简单
+*  css样式可以自行更改
+*/
 var checkObj = { /**数据验证类**/
     checkFunc: {}, //验证数据的函数对象集合
     // errorMessage:[],//错误消息
@@ -90,7 +100,7 @@ var checkObj = { /**数据验证类**/
             // 调用自定义函数
             // 应当还支持混合验证，即调用通用验证和自定义验证函数
             for (i in checkConfig) {
-                if (i === 'tips') {} else if (i === 'defaultValidate') {
+                if (i === 'tips' || i === 'isRequired') {} else if (i === 'defaultValidate') {
                     validateArr = checkConfig.defaultValidate;
                     for (dLoop = 0, dLen = validateArr.length; dLoop < dLen; dLoop++) {
                         checker = this.checkFunc[validateArr[dLoop]];
@@ -172,11 +182,13 @@ var checkObj = { /**数据验证类**/
         });
 
         // formId.find('input[type="submit"]').click(function(e) {
-        formId.on('submit',function(e){
+        formId.on('submit', function(e) {
             var flag = true;
             // 若验证全部完成，则进行表单提交
+            // 进行表单必须字段的验证
+            // 非必须字段提交可以绕过验证
             $.each(validateData, function(i, ele) {
-                if (!checkObj.check(ele, checkConfig[i])) {
+                if (!!checkConfig[i].isRequired&&!checkObj.check(ele, checkConfig[i])) {
                     flag = false;
                 };
             });
@@ -187,7 +199,7 @@ var checkObj = { /**数据验证类**/
             } else {
                 //使用默认提交的action
                 // 阻止默认提交
-                !flag&&e.preventDefault();
+                !flag && e.preventDefault();
                 // flag && formId.get(0).submit();
             }
         });
