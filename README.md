@@ -124,13 +124,5 @@ pwd:{
 通常会有这样的校验需求，我们需要验证登陆用户名是不是正确的，这时就需要和后端进行通信验证了。异步校验，无法同步返回验证结果。
 所以只能设置为同步校验了，可以设置 jquery 内置方法ajax async属性为 false。
 
-示例：
-
-```javascript
-fullName:{
-    isRequired:true,
-    tips:'用户名就是你的昵称啊',
-    defaultValidate:['isUserName']
-```
 
 
