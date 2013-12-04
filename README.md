@@ -10,7 +10,7 @@
 
 ###初始化
 
-```
+```javascript
 checkObj.initialize($('#login'),{fullName:$('.user-name')},{
     fullName:{
         isRequired:true,//必须验证字段
