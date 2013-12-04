@@ -33,7 +33,7 @@ checkObj.initialize($('#login'),{fullName:$('.user-name')},{
 
 一个有回调的验证示例：
 
-```
+```javascript
 checkObj.initialize($('#login'),{fullName:$('.user-name')},{
     fullName:{
         tips:'用户名就是你的昵称啊',
@@ -52,7 +52,7 @@ checkObj.initialize($('#login'),{fullName:$('.user-name')},{
 
 **defaultValidate** 属性可以设置单个验证，也可以设置多个验证。单个验证可以用字符串指明，比如：'userNameValidateRule'。多个验证组合，请放在数组中，比如['isEmpty','isNumber']。但是这里不建议这么做。如果有一些常用的验证规则，请直接写入该插件中，在checkObj.checkFunc命名空间进行验证扩展。比如：
 
-```
+```javascript
 // 用户名验证
 checkObj.checkFunc.userName = {
     validate: function(val) {
@@ -94,7 +94,7 @@ checkObj.checkFunc.isEmpty = {
 * 对于通用的验证规则，可以像userName那样，写在验证插件中，然后就可以在验证规则中进行调用了。这个时候，使用defaultvalidate属性进行调用。
 * 对于私有的验证规则，也就是很少用到的验证字段，可以直接在验证规则中定义，而不用写在插件中。比如密码校验：
 
-```
+```javascript
 pwd:{
     isRequired:true,
     tips:'先填写我哦',
@@ -126,7 +126,7 @@ pwd:{
 
 示例：
 
-```
+```javascript
 fullName:{
     isRequired:true,
     tips:'用户名就是你的昵称啊',
