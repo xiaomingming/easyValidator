@@ -36,6 +36,7 @@ checkObj.initialize($('#login'),{fullName:$('.user-name')},{
 ```javascript
 checkObj.initialize($('#login'),{fullName:$('.user-name')},{
     fullName:{
+        isRequired:true,
         tips:'用户名就是你的昵称啊',
         defaultValidate:['userName']
     }
