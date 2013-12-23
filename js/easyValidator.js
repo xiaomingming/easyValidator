@@ -215,11 +215,11 @@ checkObj.checkFunc.userName = {
             this.message = '用户名不能为空';
             return false;
         }
-        if (/\w/g.test(val) === false) {
+        if (/^[A-Za-z0-9]{2,16}?$/g.test(val) === false) {
             this.message = '用户名输入只能为数字，字母和下划线';
             return false;
         }
-        if ($.trim(val).length > 16 || $.trim(val).length < 2) {
+        if (val.length > 16 || val.length < 2) {
             this.message = '用户名长度错误';
             return false;
         }
