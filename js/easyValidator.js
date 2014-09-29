@@ -9,15 +9,94 @@
  *  css样式可以自行更改
  */
 (function(w, $, undefined) {
-    var frmValidator = {
-        checkFunc: {}, //验证数据的函数对象集合
-        domConfig: {
-            formItem: 'form-item', //验证的表单项
-            errorContainer: 'error', //错误提示容器
-            errorClass: 'error-border', // 验证错误时，给验证的表单元素添加的错误样式
-            dataDefault: 'default' // 默认值数据绑定属性设置
+    var Validator = function(formId, checkConfig) {
+        // this.checkFunc = {};
+        this.formId = formId;
+        this.checkConfig = checkConfig;
+        this.checkFunc = {
+            isUserName: {
+                validate: function(val, ele) {
+                    var _reg = /[0-9a-zA-Z_-]/;
+                    return _reg.test(val);
+                },
+                message: '请填写正确的用户名！' //错误消息
+            },
+            isEmpty: {
+                validate: function(val, ele) {
+                    return $.trim(val) !== '';
+                },
+                message: '输入不能为空！' //错误消息
+            },
+            isEmail: {
+                validate: function(val, ele) {
+                    var _reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                    return _reg.test(val);
+                },
+                message: '请填写正确的邮件格式！' //错误消息
+            }
+        };
+        // 此配置对html结构有依赖
+        this.domConfig = {
+            formItem: 'form-item', //验证的表单项类名
+            errorContainer: 'error', //错误提示容器类名
+            errorClass: 'error-border', // 验证错误时，给验证的表单元素添加的错误样式类名
+            dataDefault: 'default' // 被验证的元素，默认值数据绑定属性设置 data-default
+        };
+
+    };
+    Validator.prototype = {
+        constructor: Validator,
+        /*
+         * 验证初始化
+         * @param { Function } 表单验证完成后的回调函数
+         * @return
+         */
+        initialize: function(callback) {
+            // 针对文本输入框进行blur事件绑定
+            // 需要支持对无事件隐藏字段的绑定
+            var that = this,
+                formId = this.formId,
+                checkConfig = this.checkConfig;
+
+            $.each(checkConfig, function(i, ele) {
+                var checkEle = that.formId.find(ele.ele),
+                    dText = checkEle.data(that.domConfig.dataDefault);
+                // 验证事件绑定
+                checkEle.on(that.evtType(checkEle), function() {
+                    that.check(ele);
+                });
+                // 默认值的聚焦和失焦提示
+                dText && checkEle.on('blur', function() {
+                    that.defaultTip($(this), dText);
+                }).on('focus', function() {
+                    that.defaultTip($(this), dText);
+                });
+            });
+            // 表单提交绑定
+            formId.on('submit', function(e) {
+                var flag = true;
+                // 若验证全部完成，则进行表单提交
+                // 进行表单必须字段的验证
+                // 非必须字段提交可以绕过验证
+                $.each(checkConfig, function(i, ele) {
+                    if (!!ele.isRequired && !that.check(ele)) {
+                        flag = false;
+                    }
+                });
+                if (!!callback && (that.dataType(callback) === 'function')) {
+                    //存在回调的情形
+                    flag && callback();
+                } else {
+                    // 阻止默认提交
+                    !flag && e.preventDefault();
+                }
+            });
+            return this;
         },
-        showInfoFunc: {}, //显示消息的函数
+        setCheckConfig: function(config) {
+            this.checkConfig = $.extend(true, this.checkConfig, config);
+            return this;
+        },
         /*
          * 获取数据类型
          * @param { All }
@@ -29,6 +108,19 @@
                 return data;
             }
             return to.call(data, null).slice(8, -1).toLowerCase();
+        },
+        /*
+         * 获取html标签对应的事件类型
+         * @param { DOMElement }
+         * @return event string
+         */
+        evtType: function(ele) {
+            var tName = ele.get(0).tagName.toLowerCase(),
+                eleType = ele.attr('type');
+            if (tName === 'select' || (tName === 'input' && eleType === 'checkbox')) {
+                return 'change';
+            }
+            return 'blur';
         },
         /*
          * 显示或隐藏错误信息
@@ -67,7 +159,7 @@
          * @return
          */
         check: function(checkConfig) {
-            var checkElement = checkConfig.ele;
+            var checkElement = this.formId.find(checkConfig.ele);
             var checkType, value,
                 errorContainer, i, validateArr, dLoop, dLen, domConfig = this.domConfig;
             // 获取数值这里，需要判断dom类型
@@ -83,7 +175,6 @@
                 checkElement: checkElement,
                 errorContainer: errorContainer
             };
-
 
             // 调用自定义函数
             // 应当还支持混合验证，即调用通用验证和自定义验证函数
@@ -112,112 +203,8 @@
             }
             this.showMsg(domObj).OK();
             return true;
-        },
-        /*
-         * 获取html标签对应的事件类型
-         * @param { DOMElement }
-         * @return event string
-         */
-        evtType: function(ele) {
-            var tName = ele.get(0).tagName.toLowerCase(),
-                eleType = ele.attr('type');
-            if (tName === 'select' || (tName === 'input' && eleType === 'checkbox')) {
-                return 'change';
-            }
-            return 'blur';
-        },
-        initialize: function(formId, checkConfig, callback) {
-            // 针对文本输入框进行blur事件绑定
-            // 需要支持对无事件隐藏字段的绑定
-            var that = this;
-
-            $.each(checkConfig, function(i, ele) {
-                var checkEle = ele.ele,
-                    dText = checkEle.data(that.domConfig.dataDefault);
-                // 验证事件绑定
-                checkEle.on(that.evtType(checkEle), function() {
-                    that.check(ele);
-                });
-                // 默认值的聚焦和失焦提示
-                dText && checkEle.on('blur', function() {
-                    that.defaultTip($(this), dText);
-                }).on('focus', function() {
-                    that.defaultTip($(this), dText);
-                });
-            });
-            // 表单提交绑定
-            formId.on('submit', function(e) {
-                var flag = true;
-                // 若验证全部完成，则进行表单提交
-                // 进行表单必须字段的验证
-                // 非必须字段提交可以绕过验证
-                $.each(checkConfig, function(i, ele) {
-                    if (!!ele.isRequired && !that.check(ele)) {
-                        flag = false;
-                    }
-                });
-                if (!!callback && (that.dataType(callback) === 'function')) {
-                    //存在回调的情形
-                    flag && callback();
-                } else {
-                    // 阻止默认提交
-                    !flag && e.preventDefault();
-                }
-            });
         }
+
     };
-    /*
-     * 考虑到常用的字段验证包含了基本验证函数中的一些，所以，可以把这些封装起来，而不用通过数组的方式调用最小验证函数
-     */
-    /*
-     * 检查是否为空
-     */
-    frmValidator.checkFunc.isEmpty = {
-        validate: function(val, ele) {
-            return $.trim(val) !== '';
-        },
-        message: '输入不能为空！' //错误消息
-    };
-    /*
-     * 检查电子邮件
-     */
-    frmValidator.checkFunc.isEmail = {
-        validate: function(val, ele) {
-            var _reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-            return _reg.test(val);
-        },
-        message: '请填写正确的邮件格式！' //错误消息
-    };
-    /*
-     * 检查用户名
-     * 用户名只能为数字，字母，中划线，下滑线组合，长度不做限制
-     */
-    frmValidator.checkFunc.isUserName = {
-        validate: function(val, ele) {
-            var _reg = /[0-9a-zA-Z_-]/;
-            return _reg.test(val);
-        },
-        message: '请填写正确的用户名！' //错误消息
-    };
-    /*
-     * 检查密码格式
-     * 此处密码为数字，字母，下划线组合，6-16位
-     */
-    frmValidator.checkFunc.isPassword = {
-        validate: function(val, ele) {
-            var _reg = /^[0-9a-zA-Z]{6,16}$/;
-            return _reg.test(val);
-        },
-        message: '请输入正确的密码格式'
-    };
-    /*
-     * 检查是否选择项目
-     */
-    frmValidator.checkFunc.isChecked = {
-        validate: function(val, ele) {
-            return val;
-        },
-        message: '未选择值!' //错误消息
-    };
-    window.easyValidator = frmValidator;
+    window.EasyValidator = Validator;
 })(window, jQuery, undefined);
