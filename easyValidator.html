@@ -9,11 +9,11 @@
 
 <body>
     <div class="login">
-        <form  class="form" id="login">
+        <form class="form" id="login">
             <div class="form-infor">
                 <div class="form-item">
                     <label for="username">用户名:</label>
-                    <input type="text" id="username" class="text user-name" />
+                    <input type="text" id="username" class="text user-name" value="请输入用户名" data-default="请输入用户名"/>
                     <div class="error"></div>
                     <div class="tips">ssssssssssssssssss</div>
                 </div>
@@ -67,100 +67,39 @@
                     <div class="error"></div>
                     <div class="tips"></div>
                 </div>
+                <div class="form-item">
+                    <label for="read-text">同意该协议</label>
+                    <input id="read-text" type="checkbox" />
+                    <div class="error"></div>
+                </div>
                 <div class="form-item submit-container">
                     <input type="submit" class="form-submit" value="注册">
                 </div>
+
             </div>
         </form>
     </div>
     <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
     <script type="text/javascript" src="js/easyValidator.js"></script>
     <script type="text/javascript">
-    /*
-     * 验证的调用顺序对验证的先后有影响
-     * 比如把defaultValidate定义在自定义函数前面，则优先执行defaultValidate配置规则
-     */
-    /* checkObj.initialize($('#login'),{
-                fullName:$('.user-name'),
-                regEmail:$('.reg-email'),
-                pwd:$('.pwd'),
-                confirmPwd:$('.confirm-pwd'),
-                select:$('select'),
-                textarea:$('textarea')
-            },{
-                fullName:{
-                    isRequired:true,
-                    defaultValidate:['isUserName']
-                },
-                regEmail:{
-                    isRequired:false,
-                    tips:'邮箱是你重要资料找回的联系信息',
-                    isEmpty:{
-                        validate:function(val){
-                            return val!='';
-                        },
-                        message:'邮箱不能为空！'//错误消息
-                    },
-                    defaultValidate:['isEmail']
-                },
-                pwd:{
-                    isRequired:true,
-                    tips:'先填写我哦',
-                    defaultValidate:['isEmpty'],
-                    minLength:{
-                        validate:function(val){
-                            return val.length>=6;
-                        },
-                        message:'密码长度至少6位以上'
-                    },
-                    isSame:{
-                        validate:function(val){
-                            if($('.confirm-pwd').val()!==''){
-                                return val===$('.confirm-pwd').val();
-                            }else {
-                                return true;
-                            }
-                        },
-                        message:'密码不一致'
-                    }
-                },
-                confirmPwd:{
-                    isRequired:true,
-                    tips:'确认密码要和初始一致',
-                    defaultValidate:['isEmpty'],
-                    minLength:{
-                        validate:function(val){
-                            return val.length>=6;
-                        },
-                        message:'密码长度至少6位以上'
-                    },
-                    isSame:{
-                        validate:function(val){
-                            return val===$('.pwd').val();
-                        },
-                        message:'密码不一致'
-                    }
-                },
-                select:{
-                    isRequired:true,
-                    isEmpty:{
-                        validate:function(val){
-                            return val!=='';
-                        },
-                        message:'选择不能为空'
-                    }
-                },
-                textarea:'isEmpty',
-                hiddenEle:'isEmpty'
-            });*/
-    checkObj.initialize($('#login'),{
+    easyValidator.initialize($('#login'), {
         fullName: {
-            ele:$('.user-name'),
+            ele: $('.user-name'),
             isRequired: true,
             defaultValidate: ['isUserName']
         },
+        readText: {
+            ele: $('#read-text'),
+            isRequired: true,
+            isEmpty: {
+                validate: function(val, ele) {
+                    return ele.attr('checked') === 'checked' ? true : false;
+                },
+                message: '请选择协议' //错误消息
+            }
+        },
         regEmail: {
-            ele:$('.reg-email'),
+            ele: $('.reg-email'),
             isRequired: false,
             tips: '邮箱是你重要资料找回的联系信息',
             isEmpty: {
@@ -194,7 +133,7 @@
             }
         },
         confirmPwd: {
-            ele:$('.confirm-pwd'),
+            ele: $('.confirm-pwd'),
             isRequired: true,
             tips: '确认密码要和初始一致',
             defaultValidate: ['isEmpty'],
@@ -212,7 +151,7 @@
             }
         },
         select: {
-            ele:$('select'),
+            ele: $('select'),
             isRequired: true,
             isEmpty: {
                 validate: function(val) {
