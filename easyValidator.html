@@ -1,51 +1,54 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>javascript 表单验证插件</title>
-        <link rel="stylesheet" type="text/css" href="style/easyValidator.css">
-    </head>
-    <body>
-        <div class="login">
-            <form action="http://www.baidu.com" class="form" id="login">
-                <div class="form-infor">
-                    <div class="form-item">
-                        <label for="username">用户名:</label>
-                        <input type="text" id="username" class="text user-name" />
-                        <div class="error"></div>
-                        <div class="tips">ssssssssssssssssss</div>
-                    </div>
-                    <div class="form-item"><label for="select">身份：</label>
-                        <select>
-                            <option value=''>---请选择---</option>
-                            <option value='0'>学生</option>
-                            <option value='1'>军人</option>
-                            <option value='2'>教师</option>
-                            <option value='3'>记者</option>
-                            <option value='4'>无业</option>
-                        </select>
-                        <div class="error"></div>
-                        <div class="tips"></div>
-                    </div>
-                    <div class="form-item">
-                        <label>密码:</label>
-                        <input type="password" class="pwd passowrd" />
-                        <div class="error"></div>
-                        <div class="tips"></div>
-                    </div>
-                    <div class="form-item">
-                        <label>确认密码:</label>
-                        <input type="password" class="confirm-pwd passowrd" />
-                        <div class="error"></div>
-                        <div class="tips"></div>
-                    </div>
-                    <div class="form-item">
-                        <label>注册邮箱:</label>
-                        <input type="text" class="text reg-email" />
-                        <div class="error"></div>
-                        <div class="tips"></div>
-                    </div>
-                    <!-- <div class="form-item"><label>你的爱好：</label>
+
+<head>
+    <meta charset="utf-8" />
+    <title>javascript 表单验证插件</title>
+    <link rel="stylesheet" type="text/css" href="style/easyValidator.css">
+</head>
+
+<body>
+    <div class="login">
+        <form  class="form" id="login">
+            <div class="form-infor">
+                <div class="form-item">
+                    <label for="username">用户名:</label>
+                    <input type="text" id="username" class="text user-name" />
+                    <div class="error"></div>
+                    <div class="tips">ssssssssssssssssss</div>
+                </div>
+                <div class="form-item">
+                    <label for="select">身份：</label>
+                    <select>
+                        <option value=''>---请选择---</option>
+                        <option value='0'>学生</option>
+                        <option value='1'>军人</option>
+                        <option value='2'>教师</option>
+                        <option value='3'>记者</option>
+                        <option value='4'>无业</option>
+                    </select>
+                    <div class="error"></div>
+                    <div class="tips"></div>
+                </div>
+                <div class="form-item">
+                    <label>密码:</label>
+                    <input type="password" class="pwd passowrd" />
+                    <div class="error"></div>
+                    <div class="tips"></div>
+                </div>
+                <div class="form-item">
+                    <label>确认密码:</label>
+                    <input type="password" class="confirm-pwd passowrd" />
+                    <div class="error"></div>
+                    <div class="tips"></div>
+                </div>
+                <div class="form-item">
+                    <label>注册邮箱:</label>
+                    <input type="text" class="text reg-email" />
+                    <div class="error"></div>
+                    <div class="tips"></div>
+                </div>
+                <!-- <div class="form-item"><label>你的爱好：</label>
                         <ul>
                             <li><label for="1">乒乓球</label><input type="checkbox" class="ckb" id="1" value='1'/></li>
                             <li><label for="2">羽毛球</label><input type="checkbox" class="ckb" id="2" value='2'/></li>
@@ -58,26 +61,26 @@
                         <div class="error"></div>
                         <div class="tips"></div>
                     </div> -->
-                    <div class="form-item">
-                        <label>你的心情：</label>
-                        <textarea name=""></textarea>
-                        <div class="error"></div>
-                        <div class="tips"></div>
-                    </div>
-                    <div class="form-item submit-container">
-                        <input type="submit" class="form-submit" value="注册">
-                    </div>
+                <div class="form-item">
+                    <label>你的心情：</label>
+                    <textarea name=""></textarea>
+                    <div class="error"></div>
+                    <div class="tips"></div>
                 </div>
-            </form>
-        </div>
-        <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
-        <script type="text/javascript" src="js/easyValidator.js"></script>
-        <script type="text/javascript">
-            /*
-            * 验证的调用顺序对验证的先后有影响
-            * 比如把defaultValidate定义在自定义函数前面，则优先执行defaultValidate配置规则
-            */
-            checkObj.initialize($('#login'),{
+                <div class="form-item submit-container">
+                    <input type="submit" class="form-submit" value="注册">
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript" src="js/jquery-1.8.2.js"></script>
+    <script type="text/javascript" src="js/easyValidator.js"></script>
+    <script type="text/javascript">
+    /*
+     * 验证的调用顺序对验证的先后有影响
+     * 比如把defaultValidate定义在自定义函数前面，则优先执行defaultValidate配置规则
+     */
+    /* checkObj.initialize($('#login'),{
                 fullName:$('.user-name'),
                 regEmail:$('.reg-email'),
                 pwd:$('.pwd'),
@@ -86,11 +89,11 @@
                 textarea:$('textarea')
             },{
                 fullName:{
-                    'isRequired':true,
+                    isRequired:true,
                     defaultValidate:['isUserName']
                 },
                 regEmail:{
-                    'isRequired':false,
+                    isRequired:false,
                     tips:'邮箱是你重要资料找回的联系信息',
                     isEmpty:{
                         validate:function(val){
@@ -101,7 +104,7 @@
                     defaultValidate:['isEmail']
                 },
                 pwd:{
-                    'isRequired':true,
+                    isRequired:true,
                     tips:'先填写我哦',
                     defaultValidate:['isEmpty'],
                     minLength:{
@@ -122,7 +125,7 @@
                     }
                 },
                 confirmPwd:{
-                    'isRequired':true,
+                    isRequired:true,
                     tips:'确认密码要和初始一致',
                     defaultValidate:['isEmpty'],
                     minLength:{
@@ -139,7 +142,7 @@
                     }
                 },
                 select:{
-                    'isRequired':true,
+                    isRequired:true,
                     isEmpty:{
                         validate:function(val){
                             return val!=='';
@@ -149,7 +152,77 @@
                 },
                 textarea:'isEmpty',
                 hiddenEle:'isEmpty'
-            });
-        </script>
-    </body>
+            });*/
+    checkObj.initialize($('#login'),{
+        fullName: {
+            ele:$('.user-name'),
+            isRequired: true,
+            defaultValidate: ['isUserName']
+        },
+        regEmail: {
+            ele:$('.reg-email'),
+            isRequired: false,
+            tips: '邮箱是你重要资料找回的联系信息',
+            isEmpty: {
+                validate: function(val) {
+                    return val != '';
+                },
+                message: '邮箱不能为空！' //错误消息
+            },
+            defaultValidate: ['isEmail']
+        },
+        pwd: {
+            ele: $('.pwd'),
+            isRequired: true,
+            tips: '先填写我哦',
+            defaultValidate: ['isEmpty'],
+            minLength: {
+                validate: function(val) {
+                    return val.length >= 6;
+                },
+                message: '密码长度至少6位以上'
+            },
+            isSame: {
+                validate: function(val) {
+                    if ($('.confirm-pwd').val() !== '') {
+                        return val === $('.confirm-pwd').val();
+                    } else {
+                        return true;
+                    }
+                },
+                message: '密码不一致'
+            }
+        },
+        confirmPwd: {
+            ele:$('.confirm-pwd'),
+            isRequired: true,
+            tips: '确认密码要和初始一致',
+            defaultValidate: ['isEmpty'],
+            minLength: {
+                validate: function(val) {
+                    return val.length >= 6;
+                },
+                message: '密码长度至少6位以上'
+            },
+            isSame: {
+                validate: function(val) {
+                    return val === $('.pwd').val();
+                },
+                message: '密码不一致'
+            }
+        },
+        select: {
+            ele:$('select'),
+            isRequired: true,
+            isEmpty: {
+                validate: function(val) {
+                    return val !== '';
+                },
+                message: '选择不能为空'
+            }
+        }
+    });
+    </script>
+</body>
+
 </html>

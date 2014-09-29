@@ -16,28 +16,27 @@ var checkObj = {
         tipsContainer: 'tips', // 正常提示容器
         errorClass: 'error-border' // 验证错误时，给验证的表单元素添加的错误样式
     },
+    
     // errorMessage:[],//错误消息
     // rightMessage:[],//正确消息
     showInfoFunc: {}, //显示消息的函数
+    /*
+     * 获取数据类型
+     * @param { All }
+     * @return data type
+     */
     getType: function(data) {
-        var to = Object.prototype.toString,
-            type = 'string';
-        if (to.call(data, null) === '[object Array]') {
-            // 传入的是个数组
-            type = 'array'
-        } else if (typeof data === 'string') {
-            // 仅仅传入了一个字符串
-            type = 'string';
-        } else if (to.call(data, null) === '[object Object]') {
-            // 传入的是个对象
-            type = 'object';
-        } else if (to.call(data, null) === '[object Function]') {
-            type = 'function';
-        } else {
-            type = 'null';
+        var to = Object.prototype.toString;
+        if (data === null || data === undefined) {
+            return data;
         }
-        return type;
+        return to.call(data, null).slice(8, -1).toLowerCase() || 'string';
     },
+    /*
+     * 显示或隐藏提示信息
+     * @param { Object }
+     * @return { Object}
+     */
     showMsg: function(opts) {
         var _that = this,
             errorClass = _that.domConfig.errorClass;
@@ -56,12 +55,14 @@ var checkObj = {
     // 此处验证，可以考虑把错误信息压到数组中进行处理
     // 对于不存在的tips，还需要进一步健壮处理
     check: function(checkElement, checkConfig) {
-        var checker, result_ok, checkType, value,
-            errorContainer, tipsContainer, i, j, validateArr, dLoop, dLen, domConfig = this.domConfig;
+        var checkType, value,
+            errorContainer, tipsContainer, i, validateArr, dLoop, dLen, domConfig = this.domConfig;
         // 获取数值这里，需要判断dom类型
         value = checkElement.val(); //获取当前的字段值
-        errorContainer = checkElement.parents('.' + domConfig.formItem).find('.' + domConfig.errorContainer);
-        tipsContainer = checkElement.parents('.' + domConfig.formItem).find('.' + domConfig.tipsContainer);
+
+        var formItem = checkElement.parents('.' + domConfig.formItem);
+        errorContainer = formItem.find('.' + domConfig.errorContainer);
+        tipsContainer = formItem.find('.' + domConfig.tipsContainer);
         // 需要遍历checkConfig
         // 判断checkConfig是数组，还是对象，还是字符串
         checkType = this.getType(checkConfig);
@@ -74,59 +75,39 @@ var checkObj = {
             tipsContainer: tipsContainer
         };
 
-        if (checkType === 'array') {
-            for (i = 0, j = checkConfig.length; i < j; i++) {
-                checker = this.checkFunc[checkConfig[i]];
-                result_ok = checker.validate(value);
 
-                domObj.checker = checker;
-                if (!result_ok) {
-                    this.showMsg(domObj)._error();
-                    return false;
-                }
-            }
-            // this.showMsg(domObj).OK();
-        } else if (checkType === 'object') {
-            // 调用自定义函数
-            // 应当还支持混合验证，即调用通用验证和自定义验证函数
-            for (i in checkConfig) {
-                if (i === 'tips' || i === 'isRequired') {} else if (i === 'defaultValidate') {
-                    validateArr = checkConfig.defaultValidate;
-                    for (dLoop = 0, dLen = validateArr.length; dLoop < dLen; dLoop++) {
-                        checker = this.checkFunc[validateArr[dLoop]];
-                        result_ok = checker.validate(value);
+        // 调用自定义函数
+        // 应当还支持混合验证，即调用通用验证和自定义验证函数
+        for (i in checkConfig) {
+            if (i === 'tips' || i === 'isRequired' || i === 'ele') {
+                // 验证条件的过滤
+                // do nothing
+            } else if (i === 'defaultValidate') {
+                validateArr = checkConfig.defaultValidate;
+                for (dLoop = 0, dLen = validateArr.length; dLoop < dLen; dLoop++) {
+                    domObj.checker = this.checkFunc[validateArr[dLoop]];
 
-                        domObj.checker = checker;
-
-                        if (!result_ok) {
-                            this.showMsg(domObj)._error();
-
-                            return false;
-                        }
-                    }
-                    // this.showMsg(domObj).OK();
-                } else {
-                    checker = checkConfig[i];
-                    domObj.checker = checker;
-
-                    result_ok = checker.validate(value);
-                    if (!result_ok) {
+                    if (!domObj.checker.validate(value)) {
                         this.showMsg(domObj)._error();
 
                         return false;
                     }
-                    // this.showMsg(domObj).OK();
+                }
+            } else {
+                domObj.checker = checkConfig[i];
+
+                if (!domObj.checker.validate(value)) {
+                    this.showMsg(domObj)._error();
+
+                    return false;
                 }
             }
         }
         this.showMsg(domObj).OK();
-        // result_ok = true;
-        // return result_ok;
         return true;
     },
     tips: function(checkElement, checkName, checkConfig) {
-        var result_ok,
-            errorContainer, tipsContainer,
+        var errorContainer, tipsContainer,
             domConfig = this.domConfig;
         // 获取数值这里，需要判断dom类型
         errorContainer = checkElement.parents('.' + domConfig.formItem).find('.' + domConfig.errorContainer);
@@ -142,10 +123,16 @@ var checkObj = {
             tipsContainer.text(checkConfig.tips).show();
         }
     },
-    initialize: function(formId, validateData, checkConfig, callback) {
+    initialize: function(formId, checkConfig, callback) {
         // 针对文本输入框进行blur事件绑定
         // 需要支持对无事件隐藏字段的绑定
         var that = this;
+        var validateData = {};
+        for (var prop in checkConfig) {
+            if (checkConfig.hasOwnProperty(prop)) {
+                validateData[prop] = checkConfig[prop].ele;
+            }
+        }
         $.each(validateData, function(i, ele) {
             ele.blur(function() {
                 checkObj.check(ele, checkConfig[i]);
@@ -154,7 +141,6 @@ var checkObj = {
             });
         });
 
-        // formId.find('input[type="submit"]').click(function(e) {
         formId.on('submit', function(e) {
             var flag = true;
             // 若验证全部完成，则进行表单提交
@@ -163,7 +149,7 @@ var checkObj = {
             $.each(validateData, function(i, ele) {
                 if (!!checkConfig[i].isRequired && !checkObj.check(ele, checkConfig[i])) {
                     flag = false;
-                };
+                }
             });
 
             if (!!callback && (that.getType(callback) === 'function')) {
@@ -208,7 +194,7 @@ checkObj.checkFunc.isEmpty = {
         return $.trim(val) !== '';
     },
     message: '输入不能为空！' //错误消息
-}
+};
 /*
  * 检查电子邮件
  */
@@ -218,7 +204,7 @@ checkObj.checkFunc.isEmail = {
         return _reg.test(val);
     },
     message: '请填写正确的邮件格式！' //错误消息
-}
+};
 /*
  * 检查用户名
  * 用户名只能为数字，字母，中划线，下滑线组合，长度不做限制
@@ -229,7 +215,7 @@ checkObj.checkFunc.isUserName = {
         return _reg.test(val);
     },
     message: '请填写正确的用户名！' //错误消息
-}
+};
 /*
  * 检查密码格式
  * 此处密码为数字，字母，下划线组合，6-16位
@@ -249,4 +235,4 @@ checkObj.checkFunc.isChecked = {
         return val;
     },
     message: '未选择值!' //错误消息
-}
+};
