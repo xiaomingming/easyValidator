@@ -1,14 +1,13 @@
-#easyValidator
-#一个简单的js表单验证插件
-##插件说明
+## 一个简单的js表单验证插件
+## 插件说明
 * 初期表单验证只支持预绑定字段验证，对于动态创建的字段验证尚不支持
 * 支持自定义验证函数，ajax同步验证
 * 文本输入框和select表单元素验证支持，对于radio，checkbox验证不支持，实际上，也不需要支持radio
 * UI效果类似支付宝注册
 
-##语法说明
+## 语法说明
 
-###初始化
+### 初始化
 
 ```javascript
 checkObj.initialize($('#login'),{fullName:$('.user-name')},{
@@ -19,7 +18,7 @@ checkObj.initialize($('#login'),{fullName:$('.user-name')},{
     }
 });
 ```
-###参数说明
+### 参数说明
 
 初始化验证时，需要给checkObj对象的initialize方法传入参数：分别为：
 
@@ -45,7 +44,7 @@ checkObj.initialize($('#login'),{fullName:$('.user-name')},{
     alert('validator is perfect!');
 });
 ```
-###验证规则设置
+### 验证规则设置
 
 验证字段名称应当和验证规则名称对应起来：比如示例中的 **fullName** 字段和规则中的 **fullName**
 
@@ -86,7 +85,7 @@ checkObj.checkFunc.isEmpty = {
 
 验证规则的**validate**函数必须返回布尔值，**val**代表验证字段的输入值。**message**属性则是错误信息提示。
 
-###自定义验证规则
+### 自定义验证规则
 
 如何自定义验证规则呢？这个验证插件，实际上，我只是提供了验证的语法，考虑到实际的验证规则因项目而异，我就没有内置验证规则。
 因此这里大家可以自由定义咯。嘻嘻。那么如何定义呢？
@@ -120,7 +119,7 @@ pwd:{
 ```
 以上规则中，使用了通用的验证规则 *defaultValidate:['isEmpty']*，而且还自定义了私有的验证规则，*minLength* 和*isSame*。
 
-###Ajax同步校验
+### Ajax同步校验
 
 通常会有这样的校验需求，我们需要验证登陆用户名是不是正确的，这时就需要和后端进行通信验证了。异步校验，无法同步返回验证结果。
 所以只能设置为同步校验了，可以设置 jquery 内置方法ajax async属性为 false。
